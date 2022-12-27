@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import InfoTable from '../InfoTable';
-import { Button, Box } from '@mui/material';
+import { Button, Box, Typography } from '@mui/material';
 import  axios  from 'axios'
 
 interface Policyholder {
@@ -86,8 +86,6 @@ function PolicyholdersView() {
     phoneNumber: `PHONE NUMBER: ${item?.phoneNumber}`,
     primary: `Primary Policyholder: ${item?.isPrimary}`
   }))
-  console.log(newPolicyHolders, '???')
-
 
   return (
     <Box sx={{ textAlign: 'center' }}>
@@ -104,6 +102,9 @@ function PolicyholdersView() {
       >
         Add a policyholder
       </Button>
+      <Typography variant="h6" textAlign="center" margin="24px">
+       A few todos before release: Fix styling and make it pretty, add loading states and error handling, go through and clean up any unwanted code like forgotten console logs, etc, add a feature flag, add unit and end to end test, run a manual smoke test, commit all changes and open up a PR. Once the PR has been reviewed and approved, merge and deploy to staging environment for UAT. Once UAT testing has passed, release to production. 
+      </Typography>
     </Box>
   );
 }
