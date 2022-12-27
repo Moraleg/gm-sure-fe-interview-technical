@@ -26,8 +26,7 @@ function InfoTable({ header, rows, ...boxProps }: TInfoTable) {
           <TableBody>
             {rows.map(({ key, value, name, age, address, phoneNumber, primary }) => (
               <TableRow key={key}>
-{                console.log(rows, 'ROWS')
-}                <TableCell>{key}</TableCell>
+                <TableCell>{key}</TableCell>
                 <TableCell sx={{ whiteSpace: 'pre' }}>{value}</TableCell>
                 <TableCell sx={{ whiteSpace: 'pre' }}>{name}</TableCell>
                 <TableCell sx={{ whiteSpace: 'pre' }}>{age}</TableCell>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import InfoTable from '../InfoTable';
-import { Box } from '@mui/material';
+import { Button, Box } from '@mui/material';
 import  axios  from 'axios'
 
 interface Policyholder {
@@ -33,6 +33,27 @@ function PolicyholdersView() {
    
   }
 
+  const addPolicyHolder = async () => {
+    await axios.post('https://fe-interview-technical-challenge-api-git-main-sure.vercel.app/api/policyholders', {
+      name: 'John Smith',
+      age: 40,
+      address: {
+        line1: '1234 Starfish Ln',
+        line2: '2B',
+        city: 'Miami',
+        state: 'Florida',
+        postalCode: '12345',
+      },
+      phoneNumber: '888-111-3456',
+    })
+    .then(function (response) {
+      console.log(response, 'RESPONSE');
+    })
+    .catch(function (error) {
+      console.log(error, 'ERROR');
+    });  
+  }
+
   useEffect(() => {
    getPolicyholders()
   }, []);
@@ -43,7 +64,8 @@ function PolicyholdersView() {
   console.log(policyHolders)
 
 
-  const rows = policyHoldersModified && policyHoldersModified.map((item) => ({
+  const rows = policyHoldersModified && policyHoldersModified.map((item, index) => ({
+    key: `KEY ${index}`,
     name: `NAME: ${item?.name}`,
     age: `AGE: ${item?.age}`,
     address: `ADDRESS: ${item?.address?.line1} ${item?.address?.line2} ${item?.address?.city}, ${item?.address?.state} ${item?.address?.postalCode}`,
@@ -55,6 +77,17 @@ function PolicyholdersView() {
   return (
     <Box sx={{ textAlign: 'center' }}>
       <InfoTable header="Policyholder tabs" rows={rows} />
+      <Button
+        onClick={() => addPolicyHolder()}
+        variant="contained"
+        color="primary"
+        size="large"
+        sx={{
+          marginTop: '20px'
+        }}
+      >
+        Add a policyholder
+      </Button>
     </Box>
   );
 }
