@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import InfoTable from '../InfoTable';
 import { Button, Box } from '@mui/material';
 import  axios  from 'axios'
@@ -19,6 +19,8 @@ interface Policyholder {
 
 function PolicyholdersView() {
   const [ policyHolders, setPolicyHolders ] = useState<Array<Policyholder>>([]);
+  const [ newPolicyHolders, setNewPolicyHolders ] = useState<Array<Policyholder>>([]);
+
 
   const getPolicyholders = async () => {
       await axios.get('https://fe-interview-technical-challenge-api-git-main-sure.vercel.app/api/policyholders')
@@ -33,7 +35,8 @@ function PolicyholdersView() {
    
   }
 
-  const addPolicyHolder = async () => {
+
+  const handleAddPolicyHolder = useCallback(async () => {
     await axios.post('https://fe-interview-technical-challenge-api-git-main-sure.vercel.app/api/policyholders', {
       name: 'John Smith',
       age: 40,
@@ -47,12 +50,14 @@ function PolicyholdersView() {
       phoneNumber: '888-111-3456',
     })
     .then(function (response) {
-      console.log(response, 'RESPONSE');
+      const { policyHolders } = response?.data || {}
+      setNewPolicyHolders(policyHolders)
+
     })
     .catch(function (error) {
       console.log(error, 'ERROR');
-    });  
-  }
+    }); 
+  }, [setNewPolicyHolders])
 
   useEffect(() => {
    getPolicyholders()
@@ -64,7 +69,7 @@ function PolicyholdersView() {
   console.log(policyHolders)
 
 
-  const rows = policyHoldersModified && policyHoldersModified.map((item, index) => ({
+  const rows = policyHoldersModified && policyHoldersModified?.map((item, index) => ({
     key: `KEY ${index}`,
     name: `NAME: ${item?.name}`,
     age: `AGE: ${item?.age}`,
@@ -73,12 +78,23 @@ function PolicyholdersView() {
     primary: `Primary Policyholder: ${item?.isPrimary}`
   }))
 
+  const newPolicyHolderRows = newPolicyHolders && newPolicyHolders?.map((item, index) => ({
+    key: `KEY ${index}`,
+    name: `NAME: ${item?.name}`,
+    age: `AGE: ${item?.age}`,
+    address: `ADDRESS: ${item?.address?.line1} ${item?.address?.line2} ${item?.address?.city}, ${item?.address?.state} ${item?.address?.postalCode}`,
+    phoneNumber: `PHONE NUMBER: ${item?.phoneNumber}`,
+    primary: `Primary Policyholder: ${item?.isPrimary}`
+  }))
+  console.log(newPolicyHolders, '???')
+
 
   return (
     <Box sx={{ textAlign: 'center' }}>
       <InfoTable header="Policyholder tabs" rows={rows} />
+      <InfoTable header="New Policyholder tabs" rows={newPolicyHolderRows} />
       <Button
-        onClick={() => addPolicyHolder()}
+        onClick={() => handleAddPolicyHolder()}
         variant="contained"
         color="primary"
         size="large"
